@@ -1,8 +1,10 @@
 package com.dailycodework.lakesidehotel.service;
 
 import com.dailycodework.lakesidehotel.model.Room;
+import com.dailycodework.lakesidehotel.repository.BookingRepository;
 import com.dailycodework.lakesidehotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,6 +24,9 @@ import java.util.List;
 public class RoomServiceImpl implements IRoomService{
 
     private final RoomRepository roomRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     @Override
     public Room addNewRoom(MultipartFile file, String roomType, BigDecimal roomPrice) throws SQLException, IOException {
@@ -55,5 +61,11 @@ public class RoomServiceImpl implements IRoomService{
 
         }
         return roomRepository.save(room);
+    }
+
+    @Override
+    public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate, String roomType) {
+        List<Room> availableRooms = roomRepository.findByRoomTypeAndAvailability(checkInDate,checkOutDate,roomType);
+        return availableRooms;
     }
 }
