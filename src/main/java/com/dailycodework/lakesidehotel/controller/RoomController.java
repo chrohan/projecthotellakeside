@@ -48,7 +48,7 @@ public class RoomController {
     }
 
     @GetMapping("/get-rooms")
-    @Transactional
+    //@Transactional
     public ResponseEntity<List<RoomResponse>> getAllRooms() throws SQLException {
         List<Room> rooms = roomRepository.findAll();
         List<RoomResponse>  roomResponses = new ArrayList<>();
